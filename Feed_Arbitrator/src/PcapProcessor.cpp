@@ -375,10 +375,12 @@ bool PcapProcessor::parseUdpPayload(const uint8_t* data,
     //We need to extract IHL to know the actual IP header length, which can be more than 20 bytes if there are options.
     const uint8_t ihl = static_cast<uint8_t>(ip->version_ihl & 0x0F); //Extract lorwer 4 bits for IHL
 
-    //Convert the IHL value into actual bytes.
+    //Convert IHL (in 32‑bit words) to actual bytes by multiplying by 4 (since each word is 4 bytes).
     //IHL is the number of 32-bit words in the IP header, so we multiply by 4 to get the length in bytes.
     const uint32_t ip_header_len = static_cast<uint32_t>(ihl) * 4U;
 
+    //UDP_PROTOCOL_NUMBER = 17, which is the standard protocol number for UDP in the IPv4 header.
+    //For TCP it would be 6, for example. We check this to ensure we're parsing the correct protocol.
     if (ip->protocol != UDP_PROTOCOL_NUMBER)
         return false;
 
