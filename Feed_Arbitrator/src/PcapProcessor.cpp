@@ -44,10 +44,41 @@ Handles:
 //Ensure that struct matches the exact binary layout of an Ethernet frame header.
 #pragma pack(push, 1) //align all struct members on 1‑byte (no padding) boundaries in memory to match the incoming on-the-wire layout. 
 //This is crucial for correct parsing of raw packet data.
+
+/*
+1. Ethernet Frame (what NIC sends):
+[Ethernet Header] => [Dst MAC, Src MAC, EtherType] => L2: Filled by: my Trading System's router/switch before sending to it's NIC
+    ↓
+[IP Header] ==> L3: Filled by: Exchange server’s OS kernel before sending to its NIC
+    ↓
+[TCP/UDP Header] ==> L4: Filled by: Exchange server’s OS kernel before sending to its NIC
+    ↓
+[Payload] ==> L7: Filled by: CME MDP 3.0 application on the exchange server
+    ↓
+[Hardware Timestamp Trailer] ==> Filled by: Metamako or Arista NIC on my Trading System's server
+
+Summary of who fills what:
+My Trading System's Routers fill Ethernet headers.
+Exchange servers fill IP + UDP/TCP headers + payload.
+My Trading System's NIC adds timestamps.
+
+The exchange sends an IP packet (IP header + TCP/UDP header + payload).
+Your router wraps that packet inside an Ethernet frame before delivering it to your NIC.
+Your NIC receives the frame and adds a timestamp locally.
+
+2. EthernetHeader dst & src are hardware identifiers, not IPs.
+Why do we need MAC addresses?
+Because Ethernet (Layer‑2) only works inside a local network segment LAN, and it uses MAC addresses to identify devices.
+Routers use IP addresses, but switches use MAC addresses.
+
+Switches forward frames based on MAC
+Routers forward packets based on IP
+
+So MAC is essential for local delivery. */
 struct EthernetHeader {
-    uint8_t dst[6];
-    uint8_t src[6];
-    uint16_t ethertype; //2 bytes
+    uint8_t dst[6]; //Destination MAC: { 0x3C, 0xFD, 0xFE, 0xA1, 0x22, 0x10 } => 3C:FD:FE:A1:22:10
+    uint8_t src[6]; //Source MAC: { 0xA4, 0x5E, 0x60, 0x9B, 0xC2, 0x77 } => A4:5E:60:9B:C2:77
+    uint16_t ethertype; // e.g., 0x0800 for IPv4 (2 bytes)
 }; //__attribute__((packed)); not C++ standard, use #pragma pack instead
 
 /**
