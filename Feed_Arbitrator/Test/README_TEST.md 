@@ -1,0 +1,53 @@
+
+Running the Test Suite:
+-----------------------
+This project includes test suite covering arbitration logic. 
+Tests are located under the Test/ directory and use the Catch2 framework.
+
+Prerequisites
+-------------
+CMake 3.10 or newer
+A C++17‑compatible compiler
+Docker (optional, if running tests inside the provided container)
+Catch2 is included as a submodule or vendored dependency and is automatically built as part of the test target.
+
+Configuration & Building Tests
+---------------------------
+
+run.sh and docker_run.sh will automatically run tests unless --no-test  option is given
+But, if we want to run only tests then follow instructions given below:
+
+From the project root:
+
+1. export PCAP_DIR=<Pcap Files Directory> 
+   For example:
+   > export PCAP_DIR=PcapSamples  
+2. Change the desired values in file Test/test_summary.cpp
+3. Build 
+   >./build.sh
+
+   This  will produce a test executable named:
+   run_tests
+
+Running Tests
+-------------
+From the project directory:
+> build/Test/run_tests
+
+
+Running Tests Inside Docker
+---------------------------
+
+From the project directory:
+> ./docker_run.sh <Pcap Files Directory> 
+
+It will run test along with main application
+ 
+
+Adding New Tests
+----------------
+New test files can be added under:
+Test/
+
+They will be automatically included in the build as long as they are listed in Test/CMakeLists.txt.
+
