@@ -16,6 +16,7 @@ The `PCAP_GENERATOR` directory provides a Python-based toolset for producing syn
 ---
 
 ## File Structure
+
 Feed_Arbitrator/
 │
 ├── CMakeLists.txt
@@ -32,13 +33,13 @@ Feed_Arbitrator/
 │   ├── Arbitration.cpp
 │   ├── PcapProcessor.hpp
 │   ├── PcapProcessor.cpp
-│   └── debug/              (optional debugging utilities)
+│   └── debug/(optional debugging utilities)
 │
-├── Test/                   (optional unit tests)
+├── Test/ (optional unit tests)
 │   ├── CMakeLists.txt
 │   └── test_summary.cpp
 │
-├── PcapSamples/            (sample PCAP files)
+├── PcapSamples/(sample PCAP files)
 │   ├── sample_a.pcap
 │   └── sample_b.pcap
 │
