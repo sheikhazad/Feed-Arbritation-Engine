@@ -43,7 +43,7 @@ Compute and print to stdout the following statistics:
 - Include a working dockerfile with instructions on how to build and run your app.
 - You have been provided with a clang-format file. Please format all of your code prior to submission.
 
-## What to submit
+## What is expected?
 
 - Source code
 - Unit tests
